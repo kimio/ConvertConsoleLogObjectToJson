@@ -43,11 +43,15 @@ public class Convert {
     }
 
     private String removeInvalidString(String string) {
-        return string.replace("*", "").replace(";", "").replace("\\U00fa", "ú");
+        return string.replace("*", "").replace(";", "");
     }
 
     private String verifyXcodeLog(String logRow) {
-        logRow = logRow.trim().replace("  ", " ");
+        logRow = logRow.trim().
+                replace("  ", " ").
+                replace("\\U200b", "").
+                replace("\\U00fa", "ú").
+                replace("\\U00da", "Ú");
         if (logRow.equals("{")||logRow.equals("}")||logRow.equals("},")) {
             return logRow;
         }
@@ -74,6 +78,9 @@ public class Convert {
                 boolean isString = (vars.get(key).toLowerCase().contains("string"));
                 return "\"" + key + "\":" + XcodeFilterNullAndCloseRow(isString, value);
             }
+        }
+        if (logRow.contains(" {")) {
+            return "{";
         }
         return "";
     }
