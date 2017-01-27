@@ -43,19 +43,13 @@ public class Convert {
     }
 
     private String removeInvalidString(String string) {
-        return string.replace("*", "").replace(";", "");
+        return string.replace("*", "").replace(";", "").replace("\\U00fa", "ú");
     }
 
     private String verifyXcodeLog(String logRow) {
         logRow = logRow.trim().replace("  ", " ");
-        if (logRow.equals("{")) {
-            return "{";
-        }
-        if (logRow.equals("},")) {
-            return "},";
-        }
-        if (logRow.equals("}")) {
-            return "}";
+        if (logRow.equals("{")||logRow.equals("}")||logRow.equals("},")) {
+            return logRow;
         }
         if (logRow.contains("Array")) {
             return "[";
@@ -71,7 +65,7 @@ public class Convert {
 
         if (logColumns.length > 1) {
             String key = logColumns[0].trim().replace("\"", "");
-            String value = logColumns[1].trim().replace(";", "");
+            String value = logColumns[1].trim().replace(";", "").replace("\"", "").replace("(null)", "null").replace("<null>", "null");
             if(value.replace(" ","").equals("{")){
                 return "\"" + key + "\":{";
             }
@@ -87,13 +81,13 @@ public class Convert {
     private String XcodeFilterNullAndCloseRow(boolean isString, String rowValue) {
         if (rowValue.contains("null")) {
             if (filter.equals("1")) {
-                return rowValue.replace("(null)", "null") + ",";
+                return rowValue.replace("null", "null") + ",";
             }
             //remove null
             if (isString) {
-                return rowValue.replace("(null)", "\"\"") + ",";
+                return rowValue.replace("null", "\"\"") + ",";
             }
-            return rowValue.replace("(null)", "0") + ",";
+            return rowValue.replace("null", "0") + ",";
         }
         if (isString) {
             return "\""+rowValue+"\",";
