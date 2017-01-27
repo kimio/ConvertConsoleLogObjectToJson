@@ -1,5 +1,5 @@
 # ConvertConsoleLogObjectToJson
-Convert your console log object to json string.
+Convert your console log Xcode object to json string.
 
 ----------
 
