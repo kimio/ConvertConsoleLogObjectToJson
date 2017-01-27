@@ -12,76 +12,86 @@ import java.util.HashMap;
  * @author felipekn
  */
 public class Convert {
+
     public String log;
     public String json;
     public String model;
     public String filter;
-    public HashMap<String,String> vars;
-    
-    public String convertToJson(){
+    public HashMap<String, String> vars;
+
+    public String convertToJson() {
         vars = new HashMap();
         String[] modelRows = model.split("\n");
         String[] logRows = log.split("\n");
-        
+
         //verify type of attributes
-        for(String property : modelRows){
+        for (String property : modelRows) {
             String[] columns = property.split(" ");
-            if(columns.length>1){
-                String varName = removeInvalidString(columns[columns.length-1]);
-                String type = removeInvalidString(columns[columns.length-2]);
+            if (columns.length > 1) {
+                String varName = removeInvalidString(columns[columns.length - 1]);
+                String type = removeInvalidString(columns[columns.length - 2]);
 
                 //add var
                 vars.put(varName, type);
             }
         }
         //verify log rows
-        for(String logRow : logRows){
-            json+= verifyXcodeLog(logRow.trim())+"\n";
+        for (String logRow : logRows) {
+            json += verifyXcodeLog(logRow.trim()) + "\n";
         }
         return removeInvalidString(json.replace("null[", "[").replace(",\n}", "\n}"));
     }
-    private String removeInvalidString(String string){
-        return string.replace("*","").replace(";", "");
+
+    private String removeInvalidString(String string) {
+        return string.replace("*", "").replace(";", "");
     }
-    private String verifyXcodeLog(String logRow){
-        if(logRow.contains(" {")){
+
+    private String verifyXcodeLog(String logRow) {
+        if (logRow.contains(" {")) {
             return "{";
         }
-        if(logRow.equals("},")){
+        if (logRow.equals("},")) {
             return "},";
         }
-        if(logRow.equals("}")){
+        if (logRow.equals("}")) {
             return "}";
         }
-        if(logRow.contains("Array")){
+        if (logRow.contains("Array")) {
             return "[";
         }
-        if(logRow.equals(")")){
+        if (logRow.equals(")")) {
             return "]";
         }
         //verify var type
         String[] logColumns = logRow.split(" = ");
-        
-        if(logColumns.length>1){
+
+        if (logColumns.length > 1) {
             String key = logColumns[0].trim();
             String value = logColumns[1].trim().replace(";", "");
-            if(vars.containsKey(key)){
+            if (vars.containsKey(key)) {
                 //Type is String
                 boolean isString = (vars.get(key).toLowerCase().contains("string"));
-                return "\""+key+"\":"+XcodeFilterNullAndCloseRow(isString, value);
+                return "\"" + key + "\":" + XcodeFilterNullAndCloseRow(isString, value);
             }
         }
         return "";
     }
-    private String XcodeFilterNullAndCloseRow(boolean isString,String rowValue){
-        if(filter.equals("1")){
-            return rowValue.replace("(null)", "null")+",";
+
+    private String XcodeFilterNullAndCloseRow(boolean isString, String rowValue) {
+        if (rowValue.contains("null")) {
+            if (filter.equals("1")) {
+                return rowValue.replace("(null)", "null") + ",";
+            }
+            //remove null
+            if (isString) {
+                return rowValue.replace("(null)", "\"\"") + ",";
+            }
+            return rowValue.replace("(null)", "0") + ",";
         }
-        //remove null
-        if(isString){
-            return rowValue.replace("(null)", "\"\"")+",";
+        if (isString) {
+            return "\""+rowValue+"\",";
         }
-        return rowValue.replace("(null)", "0")+",";
+        return rowValue+",";
     }
-    
+
 }
