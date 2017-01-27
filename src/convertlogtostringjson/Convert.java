@@ -22,7 +22,7 @@ public class Convert {
     public String convertToJson() {
         vars = new HashMap();
         String[] modelRows = model.split("\n");
-        String[] logRows = log.split("\n");
+        String[] logRows = log.replace("\\n","\n").replace("\\\"","").split("\n");
 
         //verify type of attributes
         for (String property : modelRows) {
