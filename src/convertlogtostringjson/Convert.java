@@ -47,7 +47,8 @@ public class Convert {
     }
 
     private String verifyXcodeLog(String logRow) {
-        if (logRow.contains(" {")) {
+        logRow = logRow.trim().replace("  ", " ");
+        if (logRow.equals("{")) {
             return "{";
         }
         if (logRow.equals("},")) {
@@ -62,12 +63,18 @@ public class Convert {
         if (logRow.equals(")")) {
             return "]";
         }
+        if (logRow.equals("};")) {
+            return "},";
+        }
         //verify var type
         String[] logColumns = logRow.split(" = ");
 
         if (logColumns.length > 1) {
-            String key = logColumns[0].trim();
+            String key = logColumns[0].trim().replace("\"", "");
             String value = logColumns[1].trim().replace(";", "");
+            if(value.replace(" ","").equals("{")){
+                return "\"" + key + "\":{";
+            }
             if (vars.containsKey(key)) {
                 //Type is String
                 boolean isString = (vars.get(key).toLowerCase().contains("string"));
