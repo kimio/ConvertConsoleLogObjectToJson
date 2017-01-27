@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="291.0" prefWidth="668.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="convertlogtostringjson.FXMLDocumentController">
+    <children>
+      <TextArea fx:id="model" layoutX="25.0" layoutY="48.0" prefHeight="127.0" prefWidth="195.0" />
+      <TextArea fx:id="log" layoutX="237.0" layoutY="48.0" prefHeight="127.0" prefWidth="195.0" />
+      <TextArea fx:id="json" layoutX="449.0" layoutY="48.0" prefHeight="127.0" prefWidth="195.0" />
+      <Button layoutX="25.0" layoutY="233.0" mnemonicParsing="false" onAction="#convert" prefHeight="35.0" prefWidth="619.0" text="convert" />
+      <Label layoutX="25.0" layoutY="22.0" text="Model" />
+      <Label layoutX="237.0" layoutY="22.0" prefHeight="17.0" prefWidth="195.0" text="Xcode Log Object" />
+      <Label layoutX="449.0" layoutY="22.0" text="String JSON" />
+      <ComboBox fx:id="filter" layoutX="25.0" layoutY="187.0" prefHeight="27.0" prefWidth="195.0" />
+    </children>
+</AnchorPane>
