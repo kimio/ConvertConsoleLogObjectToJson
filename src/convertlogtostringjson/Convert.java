@@ -61,7 +61,7 @@ public class Convert {
         if (logRow.equals(")")) {
             return "]";
         }
-        if (logRow.equals("};")) {
+        if (logRow.equals("};")||logRow.equals("}\";")) {
             return "},";
         }
         //verify var type
@@ -70,7 +70,7 @@ public class Convert {
         if (logColumns.length > 1) {
             String key = logColumns[0].trim().replace("\"", "");
             String value = logColumns[1].trim().replace(";", "").replace("\"", "").replace("(null)", "null").replace("<null>", "null");
-            if(value.replace(" ","").equals("{")){
+            if(value.contains("{")){
                 return "\"" + key + "\":{";
             }
             if (vars.containsKey(key)) {
